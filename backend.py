@@ -13,7 +13,7 @@ import time
 from aiohttp import web
 from bs4 import BeautifulSoup
 
-from db import connect
+from db import Database
 from statistics import count_sensitives
 from typeahead import test as test_typeahead
 
@@ -238,7 +238,7 @@ class TwitterSession:
             self.overshot = 0
 
         # count the requests that failed because of rate limiting
-        if self.remaining is 0:
+        if self.remaining == 0:
             log('[rate-limit] Limit hit by ' + str(self.username) + '.')
             self.overshot += 1
 
@@ -522,16 +522,6 @@ async def api(request):
     else:
         return web.json_response(result)
 
-async def login_accounts(accounts, cookie_dir=None):
-    if cookie_dir is not None and not os.path.isdir(cookie_dir):
-        os.mkdir(cookie_dir, 0o700)
-    coroutines = []
-    for acc in accounts:
-        session = TwitterSession()
-        coroutines.append(session.login(*acc, cookie_dir=cookie_dir))
-        account_sessions.append(session)
-    await asyncio.gather(*coroutines)
-
 async def login_guests():
     for i in range(0, guest_session_pool_size):
         session = TwitterSession()
@@ -555,6 +545,8 @@ parser.add_argument('--host', type=str, default='127.0.0.1', help='hostname/ip w
 parser.add_argument('--mongo-host', type=str, default='localhost', help='hostname or IP of mongoDB service to connect to')
 parser.add_argument('--mongo-port', type=int, default=27017, help='port of mongoDB service to connect to')
 parser.add_argument('--mongo-db', type=str, default='tester', help='name of mongo database to use')
+parser.add_argument('--mongo-username', type=str, default='', help='name of user in mongo database')
+parser.add_argument('--mongo-password', type=str, default='', help='password for user in mongo database')
 parser.add_argument('--twitter-auth-key', type=str, default=None, help='auth key for twitter guest session', required=True)
 parser.add_argument('--cors-allow', type=str, default=None, help='value for Access-Control-Allow-Origin header')
 args = parser.parse_args()
@@ -585,9 +577,15 @@ if args.debug is not None:
 
 def run():
     global db
-    db = connect(host=args.mongo_host, port=args.mongo_port)
+    db = Database(
+        host=args.mongo_host,
+        port=args.mongo_port,
+        username=args.mongo_username,
+        password=args.mongo_password,
+        db=args.mongo_db
+    )
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(login_accounts(accounts, args.cookie_dir))
+    # loop.run_until_complete(login_accounts(accounts, args.cookie_dir))
     loop.run_until_complete(login_guests())
     app = web.Application()
     app.add_routes(routes)

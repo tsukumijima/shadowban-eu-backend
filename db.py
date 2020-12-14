@@ -4,7 +4,7 @@ import sys
 from pymongo import MongoClient, errors as MongoErrors, DESCENDING
 
 class Database:
-    def __init__(self, host=None, port=27017, db='tester'):
+    def __init__(self, host=None, port=27017, username='', password='', db='tester'):
         # collection name definitions
         RESULTS_COLLECTION = 'results'
         RATELIMIT_COLLECTION = 'rate-limits'
@@ -13,7 +13,12 @@ class Database:
             print('[mongoDB] Connecting to ' + host + ':' + str(port))
             print('[mongoDB] Using Database `' + db + '`')
             # client and DB
-            self.client = MongoClient(host, port, serverSelectionTimeoutMS=3)
+            self.client = MongoClient(
+                host=host,
+                port=port,
+                username=username,
+                password=password,
+                serverSelectionTimeoutMS=3)
             self.db = self.client[db]
 
             # collections
@@ -41,8 +46,3 @@ class Database:
     def get_result_by_screen_name(self, screen_name):
         return self.results.find_one({ "profile.screen_name": screen_name }, sort=[("_id", DESCENDING)], projection={"_id": False})
 
-def connect(host=None, port=27017, db='tester'):
-    if host is None:
-        raise ValueError('[mongoDB] Database constructor needs a `host`name or ip!')
-
-    return Database(host=host, port=port, db=db)
