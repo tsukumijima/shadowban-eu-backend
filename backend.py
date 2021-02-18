@@ -189,8 +189,7 @@ class TwitterSession:
                 result = await r.json()
         except Exception as e:
             debug("EXCEPTION: " + str(type(e)))
-            if self.username is None:
-                await self.login_guest()
+            debug("EXCEPTION text: " + str(e))
             raise e
         self.monitor_rate_limit(r.headers)
         if self.username is None and self.remaining < 10 or is_error(result, 88) or is_error(result, 239):
