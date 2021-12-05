@@ -1,11 +1,17 @@
-FROM python:3.7-slim-buster
 
-RUN apt update
+# Use Python 3.9 as a base image
+FROM python:3.9-slim-buster
+
+# Package installation
+RUN apt-get update -y && apt-get upgrade -y
 RUN apt install gcc python3-dev -y
 
-RUN mkdir /app
-ADD . /app
+# Dependencies installation
+COPY requirements.txt /tmp/
+RUN pip install --no-cache-dir -r /tmp/requirements.txt && rm /tmp/requirements.txt
 
-ENV NO_VENV=1
-WORKDIR /app
-RUN ./bin/install.sh
+# Working directory
+WORKDIR /app/
+
+# entry point
+ENTRYPOINT /bin/bash docker-entry.sh .env

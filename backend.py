@@ -82,8 +82,8 @@ def ensure_dir(path):
         os.mkdir(path)
 
 parser = argparse.ArgumentParser(description='Twitter Shadowban Tester')
-parser.add_argument('--account-file', type=str, default='.htaccounts', help='json file with reference account credentials')
-parser.add_argument('--cookie-dir', type=str, default=None, help='directory for session cookies')
+parser.add_argument('--account-file', type=str, default='./accounts.json', help='json file with reference account credentials')
+parser.add_argument('--cookie-dir', type=str, default='./cookies', help='directory for session cookies')
 parser.add_argument('--log', type=str, default='./logs/backend.log', help='file to write logs to (default: ./logs/backend.log)')
 parser.add_argument('--daemon', action='store_true', help='run in background')
 parser.add_argument('--debug', action='store_true', help='show debug log messages')
@@ -137,15 +137,15 @@ async def clean_up(app):
     shutdown_logging()
 
 def run():
-    global db
-    db = None
+    global DB
+    DB = None
     if args.mongo_host is not None:
-        db = Database(
+        DB = connect(
             host=args.mongo_host,
             port=args.mongo_port,
+            db=args.mongo_db,
             username=args.mongo_username,
             password=args.mongo_password,
-            db=args.mongo_db
         )
     loop = asyncio.get_event_loop()
     loop.run_until_complete(login_accounts(TwitterSession.accounts, args.cookie_dir))

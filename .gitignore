@@ -54,7 +54,11 @@ node_modules
 .env
 .env.*
 !.env.example
-.ht*
+
+# credential
+accounts.json
+cookies
+mongo
 
 # python misc
 .venv

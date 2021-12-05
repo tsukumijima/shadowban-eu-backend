@@ -1,0 +1,33 @@
+
+version: '3.8'
+services:
+
+    # api
+    api:
+        image: shadowban-tester
+        container_name: shadowban-tester-api
+        # restart: always
+        build:
+            context: .
+        depends_on:
+          - mongo
+        ports:
+            - '${PORT}:${PORT}'
+        volumes:
+            - type: bind
+              source: '.'
+              target: '/app/'
+
+    # MongoDB
+    mongo:
+        image: mongo
+        container_name: shadowban-tester-mongo
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+        ports:
+            - 27017:27017
+        volumes:
+            - ./mongo/data:/data/db
+            - ./mongo/config:/data/configdb

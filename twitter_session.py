@@ -93,7 +93,7 @@ class TwitterSession:
             self.next_refresh = time.time() + 3600
         self._headers['X-Guest-Token'] = self._guest_token
 
-    async def login(self, username = None, password = None, email = None, cookie_dir=None):
+    async def login(self, username=None, password=None, cookie_dir=None):
         self._session = aiohttp.ClientSession()
 
         if password is not None:
@@ -116,7 +116,7 @@ class TwitterSession:
                 form_data = {}
                 soup = BeautifulSoup(login_page, 'html.parser')
                 form_data["authenticity_token"] = soup.find('input', {'name': 'authenticity_token'}).get('value')
-                form_data["session[username_or_email]"] = email
+                form_data["session[username_or_email]"] = username
                 form_data["session[password]"] = password
                 form_data["remember_me"] = "1"
                 async with self._session.post('https://twitter.com/sessions', data=form_data, headers=self._headers) as r:
