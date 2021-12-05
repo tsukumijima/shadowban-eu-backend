@@ -1,8 +1,11 @@
-FROM python:3.5.7-slim-buster
+FROM python:3.7-slim-buster
+
+RUN apt update
+RUN apt install gcc python3-dev -y
 
 RUN mkdir /app
-WORKDIR /app
-ADD requirements.txt /app/
 ADD . /app
 
-RUN pip3 install --no-cache-dir -r ./requirements.txt
+ENV NO_VENV=1
+WORKDIR /app
+RUN ./bin/install.sh

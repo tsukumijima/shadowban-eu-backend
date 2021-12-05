@@ -1,0 +1,19 @@
+
+echo -n "Looking for python3: "
+if ! hash python3 &> /dev/null; then
+  echo -e "\nFatal: Please install Python3 to use this program!"
+  exit 1
+fi
+echo "OK"
+
+if [ "$NO_VENV" != "1" ]; then
+  if [ ! -f .venv/bin/activate ]; then
+    echo "Creating new venv in: ./.venv"
+    python3 -m venv ./.venv
+  fi
+
+  echo "Loading virtualenv: ./.venv"
+  source ./.venv/bin/activate
+else
+  echo "Skipping venv setup"
+fi
