@@ -17,6 +17,11 @@ from db import Database
 from statistics import count_sensitives
 from typeahead import test as test_typeahead
 
+
+# This is a public value from the Twitter source code.
+TWITTER_AUTH_KEY = 'AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA'
+
+
 routes = web.RouteTableDef()
 
 class UnexpectedApiError(Exception):
@@ -187,8 +192,7 @@ class TwitterSession:
                 result = await r.json()
         except Exception as e:
             debug("EXCEPTION: " + str(type(e)))
-            if self.username is None:
-                await self.login_guest()
+            debug("EXCEPTION text: " + str(e))
             raise e
         self.monitor_rate_limit(r.headers)
         if self.username is None and self.remaining < 10 or is_error(result, 88) or is_error(result, 239):
@@ -234,7 +238,8 @@ class TwitterSession:
         # rate limit reset
         if last_remaining < self.remaining and self.overshot > 0 and self.username is not None:
             log('[rate-limit] Reset detected for ' + self.username + '. Saving overshoot count...')
-            db.write_rate_limit({ 'screen_name': self.username, 'overshot': self.overshot })
+            if db is not None:
+               db.write_rate_limit({ 'screen_name': self.username, 'overshot': self.overshot })
             self.overshot = 0
 
         # count the requests that failed because of rate limiting
@@ -451,7 +456,8 @@ class TwitterSession:
             result["tests"]["more_replies"] = { "error": "EISGHOSTED"}
 
         debug('[' + profile['screen_name'] + '] Writing result to DB')
-        db.write_result(result)
+        if db is not None:
+            db.write_result(result)
         return result
 
 
@@ -547,7 +553,7 @@ parser.add_argument('--mongo-port', type=int, default=27017, help='port of mongo
 parser.add_argument('--mongo-db', type=str, default='tester', help='name of mongo database to use')
 parser.add_argument('--mongo-username', type=str, default='', help='name of user in mongo database')
 parser.add_argument('--mongo-password', type=str, default='', help='password for user in mongo database')
-parser.add_argument('--twitter-auth-key', type=str, default=None, help='auth key for twitter guest session', required=True)
+parser.add_argument('--twitter-auth-key', type=str, default=TWITTER_AUTH_KEY, help='auth key for twitter guest session')
 parser.add_argument('--cors-allow', type=str, default=None, help='value for Access-Control-Allow-Origin header')
 args = parser.parse_args()
 
@@ -558,10 +564,16 @@ if (args.cors_allow is None):
 else:
     debug('[CORS] Allowing requests from: ' + args.cors_allow)
 
-ensure_dir(args.cookie_dir)
 
-with open(args.account_file, "r") as f:
-    accounts = json.loads(f.read())
+accounts = []
+if args.account_file is None:
+    debug('No account file specified.')
+elif not os.path.exists(args.account_file):
+    debug('Account file does not exist')
+else:
+    ensure_dir(args.cookie_dir)
+    with open(args.account_file, "r") as f:
+        accounts = json.loads(f.read())
 
 if args.log is not None:
     print("Logging test results to %s" % args.log)
@@ -577,13 +589,15 @@ if args.debug is not None:
 
 def run():
     global db
-    db = Database(
-        host=args.mongo_host,
-        port=args.mongo_port,
-        username=args.mongo_username,
-        password=args.mongo_password,
-        db=args.mongo_db
-    )
+    db = None
+    if args.mongo_host is not None:
+        db = Database(
+            host=args.mongo_host,
+            port=args.mongo_port,
+            username=args.mongo_username,
+            password=args.mongo_password,
+            db=args.mongo_db
+        )
     loop = asyncio.get_event_loop()
     # loop.run_until_complete(login_accounts(accounts, args.cookie_dir))
     loop.run_until_complete(login_guests())
