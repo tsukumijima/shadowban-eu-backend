@@ -6,7 +6,7 @@ services:
     api:
         image: shadowban-tester
         container_name: shadowban-tester-api
-        # restart: always
+        restart: unless-stopped
         build:
             context: .
         depends_on:
@@ -22,7 +22,7 @@ services:
     mongo:
         image: mongo
         container_name: shadowban-tester-mongo
-        restart: always
+        restart: unless-stopped
         environment:
             MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
             MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
