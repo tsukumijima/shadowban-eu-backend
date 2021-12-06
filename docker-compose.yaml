@@ -2,7 +2,7 @@
 version: '3.8'
 services:
 
-    # api
+    # API
     api:
         image: shadowban-tester
         container_name: shadowban-tester-api
