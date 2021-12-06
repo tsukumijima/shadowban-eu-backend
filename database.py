@@ -1,6 +1,7 @@
+
 import copy
-from time import sleep
 from pymongo import MongoClient
+from time import sleep
 
 from log import log
 

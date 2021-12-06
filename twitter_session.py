@@ -1,7 +1,8 @@
-from typing import Any
+
+import os
 import time
 import urllib, urllib.parse
-import os
+from typing import Any
 
 import aiohttp
 from bs4 import BeautifulSoup

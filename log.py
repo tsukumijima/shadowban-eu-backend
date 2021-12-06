@@ -1,8 +1,9 @@
+
 import gzip
 import logging
-from logging.handlers import TimedRotatingFileHandler
 import os
 import shutil
+from logging.handlers import TimedRotatingFileHandler
 
 log_format = '%(asctime)s | %(module)s:%(lineno)d | %(levelname)s: %(message)s'
 logging.basicConfig(format=log_format)

@@ -1,3 +1,4 @@
+
 import argparse
 import asyncio
 import json
@@ -7,7 +8,7 @@ import time
 from aiohttp import web
 import daemon
 
-from db import connect, Database
+from database import connect, Database
 from log import log, add_file_handler, set_log_level, shutdown_logging
 from twitter_session import TwitterSession
 
