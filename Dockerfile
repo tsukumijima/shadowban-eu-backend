@@ -4,7 +4,7 @@ FROM python:3.9-slim-buster
 
 # Package installation
 RUN apt-get update -y && apt-get upgrade -y
-RUN apt install gcc python3-dev -y
+RUN apt-get install gcc python3-dev -y
 
 # Dependencies installation
 COPY requirements.txt /tmp/
