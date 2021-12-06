@@ -17,8 +17,10 @@ Run the following commands in order.
 # Clone this repository
 $ git@github.com:tsukumijima/shadowban-eu-frontend.git
 $ cd shadowban-eu-backend
+
 # Dependencies installation
 $ pip install --no-cache-dir -r requirements.txt
+
 # Copy .env.example to .env
 $ cp .env.example .env
 ```
@@ -44,6 +46,7 @@ Run the following commands in order.
 # Clone this repository
 $ git@github.com:tsukumijima/shadowban-eu-frontend.git
 $ cd shadowban-eu-backend
+
 # Copy .env.example to .env
 $ cp .env.example .env
 ```
