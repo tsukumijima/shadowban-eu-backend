@@ -29,5 +29,9 @@ services:
         ports:
             - 27017:27017
         volumes:
-            - ./mongo/data:/data/db
-            - ./mongo/config:/data/configdb
+            - type: bind
+              source: './mongo/data/'
+              target: '/data/db/'
+            - type: bind
+              source: './mongo/config/'
+              target: '/data/configdb/'
