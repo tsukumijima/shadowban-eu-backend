@@ -18,11 +18,11 @@ Run the following commands in order.
 $ git@github.com:tsukumijima/shadowban-eu-frontend.git
 $ cd shadowban-eu-backend
 
-# Dependencies installation
-$ pip install --no-cache-dir -r requirements.txt
-
 # Copy .env.example to .env
 $ cp .env.example .env
+
+# Dependencies installation
+$ pip install --no-cache-dir -r requirements.txt
 ```
 
 You need to modify `MONGO_DB`, `MONGO_USERNAME`, `MONGO_PASSWORD` in the .env file to suit your environment.  
