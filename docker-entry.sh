@@ -4,6 +4,9 @@ if [ "$1" != "" ] && [ -f $1 ]; then
     echo "Using provided .env file: $1"
     export $(cat .env| grep -v "#" | xargs)
     shift
+else
+    echo "No .env file specified. exit."
+    exit 1
 fi
 
 CMD="python3 -u ./backend.py"
