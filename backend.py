@@ -89,7 +89,7 @@ parser.add_argument('--log', type=str, default='./logs/backend.log', help='file 
 parser.add_argument('--daemon', action='store_true', help='run in background')
 parser.add_argument('--debug', action='store_true', help='show debug log messages')
 parser.add_argument('--host', type=str, default='localhost', help='hostname/ip which to listen on (default:localhost)')
-parser.add_argument('--port', type=int, default=9001, help='port which to listen on (default: 9001)')
+parser.add_argument('--port', type=int, default=9100, help='port which to listen on (default: 9100)')
 parser.add_argument('--mongo-host', type=str, default='localhost', help='hostname or IP of mongoDB service to connect to (default: localhost)')
 parser.add_argument('--mongo-port', type=int, default=27017, help='port of mongoDB service to connect to (default: 27017)')
 parser.add_argument('--mongo-db', type=str, default='tester', help='name of mongo database to use (default: tester)')
