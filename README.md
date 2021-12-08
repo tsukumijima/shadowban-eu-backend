@@ -7,6 +7,16 @@ Frontend:
 Backend (this repository):   
 [tsukumijima/shadowban-eu-backend](https://github.com/tsukumijima/shadowban-eu-backend)
 
+## About this fork
+
+In this fork, we have made various improvements, including tidying up the code, incorporating other branches, and updating dependencies.
+
+Python has been updated to Python 3.9. Also, the miscellaneous shell scripts have been tidy up and put into docker-entry.sh.  
+In addition, the unmerged [dev branch](https://github.com/shadowban-eu/shadowban-eu-backend/tree/dev) and the code from the [testing repository](https://github.com/shadowban-eu/testing/tree/dev), which is being developed as a future version and has been heavily refactored, have been merged and the code has been tidy up.
+
+In addition, the Dockerfile has been improved and Docker Compose is now supported.   
+With support for Docker Compose, which is very useful as it allows you to run the server with just `docker-compose up` without having to build an environment.
+
 ## Setup
 
 Beforehand, Python 3.9 and MongoDB must be installed.
@@ -29,7 +39,7 @@ You need to modify `MONGO_DB`, `MONGO_USERNAME`, `MONGO_PASSWORD` in the .env fi
 Please edit the .env file in an editor.
 
 Run the api server with the following command.  
-By default, the API server is listening on port 9001.
+By default, the API server is listening on port 9100.
 
 ```bash
 # Specify the name of the .env file as an argument
@@ -55,14 +65,14 @@ If you use Docker, you need to modify `MONGO_HOST` in the .env file from `localh
 Please edit the .env file in an editor.
 
 Run the api server with the following command.  
-By default, the API server is listening on port 9001.
+By default, the API server is listening on port 9100.
 
 ```bash
 # The first time you run it, the container will be created automatically
 $ docker-compose up -d
 ```
 
-## Note
+## Notes
 
 The default is to test without login.
 
