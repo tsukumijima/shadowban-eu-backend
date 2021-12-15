@@ -2,11 +2,12 @@
 import traceback
 
 from log import log
+from util import get_ordered_tweet_ids
 
 async def test(session, user_id):
     try:
         tweets_replies = await session.get_profile_tweets_raw(user_id)
-        tweet_ids = session.get_ordered_tweet_ids(tweets_replies)
+        tweet_ids = get_ordered_tweet_ids(tweets_replies)
         replied_ids = []
         for tid in tweet_ids:
             if tweets_replies["globalObjects"]["tweets"][tid]["reply_count"] > 0 and tweets_replies["globalObjects"]["tweets"][tid]["user_id_str"] == user_id:
